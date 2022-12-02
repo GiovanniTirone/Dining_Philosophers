@@ -7,11 +7,13 @@ public class Philosopher implements Runnable{
     int id;
 
     boolean full;
+
     ReentrantLock output_mtx;
 
     ReentrantLock critical_region_mtx;
 
     Semaphore [] both_forks_available;
+
     State state;
 
     Philosopher philosophers [];
@@ -24,7 +26,8 @@ public class Philosopher implements Runnable{
                        ReentrantLock output_mtx,
                        ReentrantLock critical_region_mtx,
                        Semaphore[]both_forks_available,
-                       Philosopher [] philosophers){
+                       Philosopher [] philosophers)
+    {
         this.id = id;
         this.full = false;
         this.random = new Random();
