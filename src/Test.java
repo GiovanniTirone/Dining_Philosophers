@@ -7,7 +7,6 @@ public class Test {
 
         ReentrantLock critical_region_mtx = new ReentrantLock();
         ReentrantLock output_mtx = new ReentrantLock();
-       // State all_states[] = new State[5];
 
         Semaphore both_forks_available[] = new Semaphore[5];
         for(int i=0; i<5; i++){

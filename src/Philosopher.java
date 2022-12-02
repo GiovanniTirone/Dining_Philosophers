@@ -16,12 +16,6 @@ public class Philosopher implements Runnable{
 
     Philosopher philosophers [];
 
-   // State [] all_states;
-
-   // private int right_id;
-
-   // private int left_id;
-
     private Random random;
 
     private int eatingCounter;
@@ -38,10 +32,6 @@ public class Philosopher implements Runnable{
         this.critical_region_mtx = critical_region_mtx;
         this.both_forks_available = both_forks_available;
         this.philosophers = philosophers;
-       // this.all_states = all_states;
-        //all_states[id] = this.state;
-       // this.right_id = (id +1) % 5;
-       // this.left_id = (id + 4) % 5;
         this.eatingCounter = 0;
     }
 
@@ -75,7 +65,7 @@ public class Philosopher implements Runnable{
 
     public void eat() throws InterruptedException {
         int currentEatingTime = random.nextInt(400)+400;
-        output_mtx.lock();  //lock_guard???
+        output_mtx.lock();
         System.out.println(this + " is eating for " + currentEatingTime);
         eatingCounter++;
         output_mtx.unlock();
