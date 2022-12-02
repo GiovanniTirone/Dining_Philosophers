@@ -5,6 +5,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Philosopher implements Runnable{
 
     int id;
+
+    boolean full;
     ReentrantLock output_mtx;
 
     ReentrantLock critical_region_mtx;
@@ -12,7 +14,9 @@ public class Philosopher implements Runnable{
     Semaphore [] both_forks_available;
     State state;
 
-    State [] all_states;
+    Philosopher philosophers [];
+
+   // State [] all_states;
 
    // private int right_id;
 
@@ -26,14 +30,16 @@ public class Philosopher implements Runnable{
                        ReentrantLock output_mtx,
                        ReentrantLock critical_region_mtx,
                        Semaphore[]both_forks_available,
-                       State [] all_states){
+                       Philosopher [] philosophers){
         this.id = id;
+        this.full = false;
         this.random = new Random();
         this.output_mtx = output_mtx;
         this.critical_region_mtx = critical_region_mtx;
         this.both_forks_available = both_forks_available;
-        this.all_states = all_states;
-        all_states[id] = this.state;
+        this.philosophers = philosophers;
+       // this.all_states = all_states;
+        //all_states[id] = this.state;
        // this.right_id = (id +1) % 5;
        // this.left_id = (id + 4) % 5;
         this.eatingCounter = 0;
@@ -77,10 +83,10 @@ public class Philosopher implements Runnable{
     }
 
     public void test (int test_id) {
-        if(all_states[test_id] == State.HUNGRY &&
-                all_states[get_left_id(test_id)] != State.EATING &&
-                all_states[get_right_id(test_id)] != State.EATING ){
-            all_states[test_id] = State.EATING;
+        if(philosophers[test_id].getState() == State.HUNGRY &&
+                philosophers[get_left_id(test_id)].getState() != State.EATING &&
+                philosophers[get_right_id(test_id)].getState() != State.EATING ){
+            philosophers[test_id].setState(State.EATING);
             both_forks_available[test_id].release();
         }
     }
@@ -103,7 +109,7 @@ public class Philosopher implements Runnable{
 
     @Override
     public void run() {
-        while(true){
+        while(!full){
 
             try {
                 this.think();
@@ -114,5 +120,21 @@ public class Philosopher implements Runnable{
                 e.printStackTrace();
             }
         }
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public int getEatingCounter() {
+        return eatingCounter;
+    }
+
+    public void setFull(boolean full) {
+        this.full = full;
     }
 }

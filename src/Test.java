@@ -3,11 +3,11 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Test {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         ReentrantLock critical_region_mtx = new ReentrantLock();
         ReentrantLock output_mtx = new ReentrantLock();
-        State all_states[] = new State[5];
+       // State all_states[] = new State[5];
 
         Semaphore both_forks_available[] = new Semaphore[5];
         for(int i=0; i<5; i++){
@@ -20,7 +20,7 @@ public class Test {
                                                 output_mtx,
                                                 critical_region_mtx,
                                                 both_forks_available,
-                                                all_states);
+                                                philosophers);
         }
 
         Thread threads [] = new Thread[5];
@@ -28,6 +28,18 @@ public class Test {
             threads[i] = new Thread(philosophers[i]);
             threads[i].start();
         }
+
+        Thread.sleep(5000);
+
+        for(Philosopher philosopher : philosophers)
+            philosopher.setFull(true);
+
+        for(int i=0; i<5; i++){
+            threads[i].join();
+        }
+
+        for(Philosopher philosopher : philosophers)
+            System.out.println("The " + philosopher + " has eaten : " + philosopher.getEatingCounter());
 
     }
 }
